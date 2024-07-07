@@ -6,19 +6,20 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'last_name', 'email', 'password',
-    ];
+
+    protected $guarded= ['id'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -75,4 +76,27 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function division()
+    {
+        return $this->belongsTo(Divisions::class);
+    }
+    public function position()
+    {
+        return $this->belongsTo(Positions::class);
+    }
+    public function hasRole($role)
+    {
+        return $this->role->name === $role;
+    }
+
+    public function permissions()
+{
+    return $this->belongsToMany(Permission::class, 'user_permissions', 'user_id', 'permission_id');
+}
 }

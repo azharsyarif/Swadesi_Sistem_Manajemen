@@ -11,14 +11,33 @@ return new class extends Migration
      */
     public function up(): void
     {
+        
+        // Schema::create('users', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->string('name');
+        //     $table->string('email')->unique();
+        //     $table->foreignId('role_id')->constrained()->onDelete('cascade');
+        //     $table->timestamp('email_verified_at')->nullable();
+        //     $table->string('password');
+        //     $table->rememberToken();
+        //     $table->timestamps();
+        // });
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('last_name');
             $table->string('email')->unique();
+            $table->foreignId('role_id')->constrained()->onDelete('cascade');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->string('nama')->nullable();
+            $table->foreignId('division_id')->constrained('divisions')->onDelete('cascade');
+            $table->foreignId('position_id')->constrained('positions')->onDelete('cascade');
+            $table->date('tanggal_join')->nullable();
+            $table->text('alamat')->nullable();
+            $table->string('emergency_call_nama')->nullable();
+            $table->string('emergency_call_nomor')->nullable();
+            $table->integer('jatah_cuti')->default(12);
             $table->timestamps();
         });
 
@@ -36,6 +55,27 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+        
+
+        // Schema::create('karyawans', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('user_id')->constrained()->onDelete('cascade');
+        //     $table->string('nama')->nullable();
+        //     $table->foreignId('division_id')->constrained('divisions')->onDelete('cascade');
+        //     $table->foreignId('position_id')->constrained('positions')->onDelete('cascade');
+        //     $table->string('tanggal_join')->nullable();
+        //     $table->text('alamat')->nullable();
+        //     $table->string('emergency_call_nama')->nullable();
+        //     $table->string('emergency_call_nomor')->nullable();
+        //     $table->string('jatah_cuti')->defaut(12);
+        //     $table->timestamps();
+        // });
+
+
+
+        
+
+
     }
 
     /**

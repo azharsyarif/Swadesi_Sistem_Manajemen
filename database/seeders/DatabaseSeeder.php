@@ -19,11 +19,19 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-         \App\Models\User::factory()->create([
-             'name' => 'John',
-             'last_name' => 'Doe',
-             'password' => 'password',
-             'email' => 'test@example.com',
-         ]);
+        //  \App\Models\User::factory()->create([
+        //      'name' => 'John',
+        //      'last_name' => 'Doe',
+        //      'password' => 'password',
+        //      'email' => 'test@example.com',
+        //  ]);
+        $this->call([
+            RoleSeeder::class,
+            DivisiSeeder::class,
+            JabatanSeeder::class,
+            // PermisionSeeder::class,
+            UserSeeder::class,
+            // Other seeders...
+        ]);
     }
 }

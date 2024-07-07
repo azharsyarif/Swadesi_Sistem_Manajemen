@@ -2,7 +2,9 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\CheckRole;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 class Kernel extends HttpKernel
 {
@@ -39,6 +41,9 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+            'throttle:api',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            EnsureFrontendRequestsAreStateful::class,
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
@@ -52,6 +57,13 @@ class Kernel extends HttpKernel
      *
      * @var array<string, class-string|string>
      */
+    protected $routeMiddleware = [
+        // Other middleware entries...
+        'role' => \App\Http\Middleware\CheckRole::class,
+        'check.division' => \App\Http\Middleware\CheckDivisionMiddleware::class,
+        'permission' => \App\Http\Middleware\CheckPermission::class,
+    ];
+    
     protected $middlewareAliases = [
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,

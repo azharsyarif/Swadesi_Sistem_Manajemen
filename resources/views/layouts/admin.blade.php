@@ -37,20 +37,195 @@
             <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
         </a>
 
-        <!-- Divider -->
-        <hr class="sidebar-divider my-0">
-
-        <!-- Nav Item - Dashboard -->
+@if(Auth::user()->hasRole('admin') || Auth::user()->permissions->contains('name', 'view_dashboard'))
         <li class="nav-item {{ Nav::isRoute('home') }}">
             <a class="nav-link" href="{{ route('home') }}">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
-                <span>{{ __('Dashboard') }}</span></a>
+                <span>{{ __('Dashboard') }}</span>
+            </a>
         </li>
+@endif
 
-        <!-- Divider -->
-        <hr class="sidebar-divider">
 
-        <!-- Heading -->
+    @if(Auth::user()->hasRole('admin') || Auth::user()->permissions->contains('name', 'manage_human_resource'))
+<hr class="sidebar-divider">
+
+<!-- Heading Data -->
+<div class="sidebar-heading">
+    {{ __('Rekanan') }}
+</div>
+
+<!-- Nav Item - Rekanan -->
+    <li class="nav-item {{ Nav::isRoute('rekanan.index') }}">
+        <a class="nav-link" href="{{ route('rekanan.index') }}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>{{ __('Data Rekanan') }}</span>
+        </a>
+    </li>
+@endif
+
+@if(Auth::user()->hasRole('admin') || Auth::user()->permissions->contains('name', 'manage_human_resource'))
+<!-- Divider -->
+<hr class="sidebar-divider">
+
+<!-- Heading Data -->
+<div class="sidebar-heading">
+    {{ __('Human Resource') }}
+</div>
+
+<!-- Nav Item - Data Karyawan -->
+    <li class="nav-item {{ Nav::isRoute('karyawan.index') }}">
+        <a class="nav-link" href="{{ route('karyawan.index') }}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>{{ __('Data Karyawan') }}</span>
+        </a>
+    </li>
+
+<!-- Nav Item - Absensi -->
+    <li class="nav-item {{ Nav::isRoute('rekanan.index') }}">
+        <a class="nav-link" href="{{ route('rekanan.index') }}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>{{ __('Absensi') }}</span>
+        </a>
+    </li>
+
+<!-- Nav Item - Permohonan Cuti -->
+    <li class="nav-item {{ Nav::isRoute('pengajuan.cuti.index') }}">
+        <a class="nav-link" href="{{ route('pengajuan.cuti.index') }}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>{{ __('Permohonan Cuti') }}</span>
+        </a>
+    </li>
+
+<!-- Nav Item - Permohonan Izin Sakit -->
+    <li class="nav-item {{ Nav::isRoute('pengajuan.izin-sakit.index') }}">
+        <a class="nav-link" href="{{ route('pengajuan.izin-sakit.index') }}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>{{ __('Permohonan Izin Sakit') }}</span>
+        </a>
+    </li>
+@endif
+
+@if(Auth::user()->hasRole('admin') || Auth::user()->permissions->contains('name', 'manage_marketing'))
+<!-- Divider -->
+<hr class="sidebar-divider">
+
+<!-- Heading Data -->
+<div class="sidebar-heading">
+    {{ __('Marketing') }}
+</div>
+
+<!-- Nav Item - Order Management -->
+    <li class="nav-item {{ Nav::isRoute('marketing.order.index') }}">
+        <a class="nav-link" href="{{ route('marketing.order.index') }}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>{{ __('Order Management') }}</span>
+        </a>
+    </li>
+
+<!-- Nav Item - Invoice Management -->
+    <li class="nav-item {{ Nav::isRoute('marketing.invoice.index') }}">
+        <a class="nav-link" href="{{ route('marketing.invoice.index') }}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>{{ __('Invoice Management') }}</span>
+        </a>
+    </li>
+@endif
+
+
+@if(Auth::user()->hasRole('admin') || Auth::user()->permissions->contains('name', 'manage_operasional'))
+<!-- Divider -->
+<hr class="sidebar-divider">
+
+<!-- Heading Data -->
+<div class="sidebar-heading">
+    {{ __('Operasional') }}
+</div>
+
+<!-- Nav Item - Data Kendaraan -->
+    <li class="nav-item {{ Nav::isRoute('kendaraan.index') }}">
+        <a class="nav-link" href="{{ route('kendaraan.index') }}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>{{ __('Data Kendaraan') }}</span>
+        </a>
+    </li>
+
+<!-- Nav Item - Instruksi Jalan -->
+    <li class="nav-item {{ Nav::isRoute('intruksiJalan.index') }}">
+        <a class="nav-link" href="{{ route('intruksiJalan.index') }}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>{{ __('Instruksi Jalan') }}</span>
+        </a>
+    </li>
+
+<!-- Nav Item - Service Kendaraan -->
+    <li class="nav-item {{ Nav::isRoute('service.index') }}">
+        <a class="nav-link" href="{{ route('service.index') }}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>{{ __('Service Kendaraan') }}</span>
+        </a>
+    </li>
+
+@endif
+
+
+@if(Auth::user()->hasRole('admin') || Auth::user()->permissions->contains('name', 'manage_finance'))
+
+<!-- Divider -->
+<hr class="sidebar-divider">
+<!-- Heading Data -->
+<div class="sidebar-heading">
+    {{ __('Finance') }}
+</div>
+
+<!-- Nav Item - Approved Payment -->
+    {{-- <li class="nav-item {{ Nav::isRoute('approved.payment.index') }}">
+        <a class="nav-link" href="{{ route('approved.payment.index') }}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>{{ __('Approved Payment') }}</span>
+        </a>
+    </li> --}}
+
+<!-- Nav Item - Monitoring Tagihan -->
+    {{-- <li class="nav-item {{ Nav::isRoute('monitoring.tagihan.index') }}">
+        <a class="nav-link" href="{{ route('monitoring.tagihan.index') }}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>{{ __('Monitoring Tagihan') }}</span>
+        </a>
+    </li> --}}
+@endif
+
+
+@if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('super-admin'))
+<!-- Divider -->
+<hr class="sidebar-divider">
+
+<!-- Heading Data -->
+<div class="sidebar-heading">
+    {{ __('Admin') }}
+</div>
+
+<!-- Nav Item - Hak Akses -->
+    <li class="nav-item {{ Nav::isRoute('admin.permission.index') }}">
+        <a class="nav-link" href="{{ route('admin.permission.index') }}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>{{ __('Hak Akses') }}</span>
+        </a>
+    </li>
+    <li class="nav-item {{ Nav::isRoute('admin.user_permissions.index') }}">
+        <a class="nav-link" href="{{ route('admin.user_permissions.index') }}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>{{ __('User Permission') }}</span>
+        </a>
+    </li>
+@endif
+
+<!-- Divider -->
+<hr class="sidebar-divider">
+
+
+
+        {{-- <!-- Heading Setting-->
         <div class="sidebar-heading">
             {{ __('Settings') }}
         </div>
@@ -59,9 +234,17 @@
         <li class="nav-item {{ Nav::isRoute('profile') }}">
             <a class="nav-link" href="{{ route('profile') }}">
                 <i class="fas fa-fw fa-user"></i>
+                <span>{{ __('User Management') }}</span>
+            </a>
+        </li>
+        <!-- Nav Item - Profile -->
+        <li class="nav-item {{ Nav::isRoute('profile') }}">
+            <a class="nav-link" href="{{ route('profile') }}">
+                <i class="fas fa-fw fa-user"></i>
                 <span>{{ __('Profile') }}</span>
             </a>
         </li>
+
 
         <!-- Nav Item - About -->
         <li class="nav-item {{ Nav::isRoute('about') }}">
@@ -77,7 +260,7 @@
         <!-- Sidebar Toggler (Sidebar) -->
         <div class="text-center d-none d-md-inline">
             <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
+        </div> --}}
 
     </ul>
     <!-- End of Sidebar -->
@@ -96,7 +279,7 @@
                     <i class="fa fa-bars"></i>
                 </button>
 
-                <!-- Topbar Search -->
+                {{-- <!-- Topbar Search -->
                 <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                     <div class="input-group">
                         <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
@@ -106,7 +289,7 @@
                             </button>
                         </div>
                     </div>
-                </form>
+                </form> --}}
 
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
@@ -131,7 +314,7 @@
                         </div>
                     </li>
 
-                    <!-- Nav Item - Alerts -->
+                    {{-- <!-- Nav Item - Alerts -->
                     <li class="nav-item dropdown no-arrow mx-1">
                         <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell fa-fw"></i>
@@ -178,9 +361,9 @@
                             </a>
                             <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
                         </div>
-                    </li>
+                    </li> --}}
 
-                    <!-- Nav Item - Messages -->
+                    {{-- <!-- Nav Item - Messages -->
                     <li class="nav-item dropdown no-arrow mx-1">
                         <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-envelope fa-fw"></i>
@@ -234,9 +417,9 @@
                             </a>
                             <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
                         </div>
-                    </li>
+                    </li> --}}
 
-                    <div class="topbar-divider d-none d-sm-block"></div>
+                    {{-- <div class="topbar-divider d-none d-sm-block"></div> --}}
 
                     <!-- Nav Item - User Information -->
                     <li class="nav-item dropdown no-arrow">

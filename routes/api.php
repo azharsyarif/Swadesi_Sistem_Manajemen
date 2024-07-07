@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HR\KaryawanController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::post('/karyawans', [KaryawanController::class, 'storeAPI']);
+Route::post('/login', [KaryawanController::class, 'login']);
