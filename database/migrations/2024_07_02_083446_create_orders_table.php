@@ -13,22 +13,23 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('No_Order')->unique();
-            $table->string('No_PO_Customer');
+            $table->string('no_order')->unique();
+            $table->foreignId('no_po')->constrained('p_o_customers')->onDelete('cascade');
             $table->string('asal');
             $table->string('tujuan');
             $table->string('layanan');
-            $table->string('total_km');
+            $table->string('total_km'); 
             $table->string('total_koli');
             $table->string('total_berat');
             $table->text('deskripsi_barang');
-            $table->foreignId('rekanan_id')->constrained('rekanans')->onDelete('cascade'); //GET NAMA PT DANM TERM AGREMENT
+            $table->foreignId('rekanan_id')->constrained('rekanans')->onDelete('cascade'); // FK to rekanans
             $table->foreignId('kendaraan_id')->nullable()->constrained('kendaraans')->onDelete('cascade');
             $table->string('harga_deal');
             $table->string('total_harga_deal');
             $table->string('upload_harga_deal');
             $table->timestamps();
         });
+        
     }
 
     /**

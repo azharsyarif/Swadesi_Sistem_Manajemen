@@ -16,25 +16,41 @@
                     <thead>
                         <tr>
                             <th>Nama PT</th>
+                            <th>NPWP</th>
                             <th>Nomor Telepon</th>
                             <th>Jenis Usaha</th>
                             <th>Alamat</th>
+                            <th>Bukti NPWP</th>
                             <th>Term Agreement</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($rekanan as $rekanan)
                             <tr>
                                 <td>{{ $rekanan->nama_pt }}</td>
+                                <td>{{ $rekanan->npwp }}</td>
                                 <td>{{ $rekanan->no_tlp }}</td>
                                 <td>{{ $rekanan->jenis_usaha }}</td>
                                 <td>{{ $rekanan->alamat }}</td>
+                                <td>
+                                    @if($rekanan->upload_npwp)
+                                        <a href="{{ asset('storage/' . $rekanan->upload_npwp) }}" target="_blank">Lihat Dokumen</a>
+                                    @else
+                                        Tidak ada dokumen
+                                    @endif
+                                </td>   
                                 <td>Net {{ $rekanan->term_agrement }} Hari</td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="{{ route('rekanan.edit', $rekanan->id) }}" class="btn btn-primary btn-sm">Edit</a>
+                                        <a href="{{ route('rekanan.edit', $rekanan->id) }}" class="btn btn-primary btn-sm ">Edit</a>
+                                        <form action="{{ route('rekanan.delete', $rekanan->id) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
                                     </div>
-                                </td>
+                                </td>               
                             </tr>
                         @endforeach
                     </tbody>

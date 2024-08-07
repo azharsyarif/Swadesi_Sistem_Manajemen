@@ -2,7 +2,14 @@
 
 @section('main-content')
 <div class="container">
-    <h1>Edit Rekanan</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Edit Rekanan</h1>
+        <form action="{{ route('rekanan.delete', $rekanan->id) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn  btn-danger">Delete</button>
+        </form>
+    </div>
     <form action="{{ route('rekanan.update', $rekanan) }}" method="POST">
         @csrf
         @method('PUT')
@@ -14,6 +21,14 @@
                     <label for="nama_pt">Nama PT</label>
                     <input type="text" class="form-control @error('nama_pt') is-invalid @enderror" id="nama_pt" name="nama_pt" value="{{ old('nama_pt', $rekanan->nama_pt) }}" required>
                     @error('nama_pt')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="npwp">NPWP</label>
+                    <input type="text" class="form-control @error('npwp') is-invalid @enderror" id="npwp" name="npwp" value="{{ old('npwp', $rekanan->npwp) }}" required>
+                    @error('npwp')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
@@ -58,5 +73,7 @@
             </div>
         </div>
     </form>
+
+   
 </div>
 @endsection

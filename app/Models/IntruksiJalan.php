@@ -11,6 +11,18 @@ class IntruksiJalan extends Model
 
     protected $table = 'instruksi_jalans'; 
 
+    protected $fillable = [
+        'order_id', 
+        'driver_id', 
+        'kenek_id', 
+        'nopol', 
+        'tanggal_jalan', 
+        'tanggal_stuffing', 
+        'tanggal_stripping', 
+        'estimasi_waktu_ke_tujuan', 
+        'estimasi_jarak'
+    ];
+
     public function order()
 {
     return $this->belongsTo(Order::class);

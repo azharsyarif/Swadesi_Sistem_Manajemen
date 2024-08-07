@@ -3,7 +3,7 @@
 @section('main-content')
 <div class="container">
     <h1>Create Rekanan</h1>
-    <form action="{{ route('rekanan.store') }}" method="POST">
+    <form action="{{ route('rekanan.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="card mb-4">
@@ -13,6 +13,22 @@
                     <label for="nama_pt">Nama PT</label>
                     <input type="text" class="form-control @error('nama_pt') is-invalid @enderror" id="nama_pt" name="nama_pt" value="{{ old('nama_pt') }}" required>
                     @error('nama_pt')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="npwp">NPWP</label>
+                    <input type="text" class="form-control @error('npwp') is-invalid @enderror" id="npwp" name="npwp" value="{{ old('npwp') }}" required>
+                    @error('npwp')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="upload_npwp">Upload NPWP</label>
+                    <input type="file" class="form-control-file @error('upload_npwp') is-invalid @enderror" id="upload_npwp" name="upload_npwp" value="{{ old('upload_npwp') }}" required>
+                    @error('upload_npwp')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>

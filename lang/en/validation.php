@@ -13,13 +13,13 @@ return [
     |
     */
 
-    'accepted' => 'The :attribute must be accepted.',
-    'active_url' => 'The :attribute is not a valid URL.',
-    'after' => 'The :attribute must be a date after :date.',
-    'after_or_equal' => 'The :attribute must be a date after or equal to :date.',
-    'alpha' => 'The :attribute may only contain letters.',
-    'alpha_dash' => 'The :attribute may only contain letters, numbers, dashes and underscores.',
-    'alpha_num' => 'The :attribute may only contain letters and numbers.',
+    'accepted' => 'The :attribute harus diterima.',
+    'active_url' => 'The :attribute bukan URL yang valid.',
+    'after' => 'The :attribute harus tanggal setelah :date.',
+    'after_or_equal' => 'The :attribute harus tanggal setelah atau sama dengan :date.',
+    'alpha' => 'The :attribute hanya dapat berisi huruf.',
+    'alpha_dash' => 'The :attribute hanya dapat berisi huruf, angka, dan garis hubung.',
+    'alpha_num' => 'The :attribute hanya dapat berisi huruf dan angka.',
     'array' => 'The :attribute must be an array.',
     'before' => 'The :attribute must be a date before :date.',
     'before_or_equal' => 'The :attribute must be a date before or equal to :date.',
@@ -97,7 +97,7 @@ return [
     'password' => 'The password is incorrect.',
     'present' => 'The :attribute field must be present.',
     'regex' => 'The :attribute format is invalid.',
-    'required' => 'The :attribute field is required.',
+    'required' => 'Kolom :attribute harus diisi.',
     'required_if' => 'The :attribute field is required when :other is :value.',
     'required_unless' => 'The :attribute field is required unless :other is in :values.',
     'required_with' => 'The :attribute field is required when :values is present.',
@@ -133,6 +133,8 @@ return [
     'custom' => [
         'attribute-name' => [
             'rule-name' => 'custom-message',
+            'order_ids.required' => 'Kolom ID Order harus diisi.',
+            'revenue.required' => 'Kolom Revenue harus diisi.',
         ],
     ],
 

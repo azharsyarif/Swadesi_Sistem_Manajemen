@@ -3,13 +3,13 @@
 @section('main-content')
 <div class="container">
     <h1>Form Data Karyawan</h1>
-    <form action="{{ route('karyawan.store') }}" method="POST">
+    <form action="{{ route('karyawan.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="row">
             <!-- Kolom Kiri -->
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="name">name</label>
+                    <label for="name">Name</label>
                     <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" required>
                     @error('name')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="role_id">Role <small class="text-muted">(Hak akses pengguna dalam sistem)</small></label>
+                    <label for="role_id">Role <small>(Menentukan hak akses karyawan)</small></label>
                     <select class="form-control @error('role_id') is-invalid @enderror" id="role_id" name="role_id" required>
                         <option value="">Select Role</option>
                         @foreach ($roles as $role)
@@ -49,9 +49,21 @@
             <!-- Kolom Kanan -->
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="position_id">Jabatan <small class="text-muted">(Posisi atau judul pekerjaan dalam organisasi)</small></label>
+                    <label for="status">Status</label>
+                    <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
+                        <option value="">Select Status</option>
+                        <option value="karyawan_tetap" {{ old('status') == 'karyawan_tetap' ? 'selected' : '' }}>Karyawan Tetap</option>
+                        <option value="kontrak" {{ old('status') == 'kontrak' ? 'selected' : '' }}>Kontrak</option>
+                    </select>
+                    @error('status')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="position_id">Position</label>
                     <select class="form-control @error('position_id') is-invalid @enderror" id="position_id" name="position_id" required>
-                        <option value="">Select Jabatan</option>
+                        <option value="">Select Position</option>
                         @foreach ($positions as $position)
                             <option value="{{ $position->id }}" {{ old('position_id') == $position->id ? 'selected' : '' }}>{{ $position->name }}</option>
                         @endforeach
@@ -62,22 +74,30 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="division_id">Divisi</label>
-                    <select class="form-control @error('division_id') is-invalid @enderror" id="division_id" name="division_id" required>
-                        <option value="">Select Divisi</option>
-                        @foreach ($divisions as $division)
-                            <option value="{{ $division->id }}" {{ old('division_id') == $division->id ? 'selected' : '' }}>{{ $division->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('division_id')
+                    <label for="tanggal_join">Tanggal Bergabung</label>
+                    <input type="date" class="form-control @error('tanggal_join') is-invalid @enderror" id="tanggal_join" name="tanggal_join" value="{{ old('tanggal_join') }}" required>
+                    @error('tanggal_join')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
                 <div class="form-group">
-                    <label for="tanggal_join">Tanggal Bergabung</label>
-                    <input type="date" class="form-control @error('tanggal_join') is-invalid @enderror" id="tanggal_join" name="tanggal_join" value="{{ old('tanggal_join') }}" required>
-                    @error('tanggal_join')
+                    <label>Divisions <small>(Pilih divisi/divisi yang terkait dengan karyawan)</small></label><br>
+                    @foreach ($divisions as $division)
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="division_{{ $division->id }}" name="divisions[]" value="{{ $division->id }}" {{ is_array(old('divisions')) && in_array($division->id, old('divisions')) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="division_{{ $division->id }}">{{ $division->name }}</label>
+                        </div>
+                    @endforeach
+                    @error('divisions')
+                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="upload_ktp">Upload KTP</label>
+                    <input type="file" class="form-control-file @error('upload_ktp') is-invalid @enderror" id="upload_ktp" name="upload_ktp">
+                    @error('upload_ktp')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>

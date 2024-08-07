@@ -6,15 +6,37 @@ use App\Models\PengajuanCuti;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class CutiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
+{
+    $user = Auth::user();
+    $tab = $request->input('tab', 'Pending');
+
+    if ($tab == 'history') {
+        $cutis = PengajuanCuti::where('karyawan_id', $user->id)
+            ->whereIn('status', ['Diterima', 'Ditolak'])
+            ->with(['approvedBy', 'karyawan'])
+            ->get();
+    } else {
+        $cutis = PengajuanCuti::where('karyawan_id', $user->id)
+            ->where('status', 'Pending')
+            ->with(['approvedBy', 'karyawan'])
+            ->get();
+    }
+
+    return view('HR.cuti.cuti', compact('cutis', 'user', 'tab'));
+}
+
+
+    public function createIndex()
     {
         $user = Auth::user();
         $cutis = PengajuanCuti::where('karyawan_id', $user->id)->get();
 
-        return view('HR.cuti.cuti', compact('cutis','user'));
+        return view('HR.cuti.create', compact('cutis','user'));
     }
 
     public function store(Request $request)
@@ -39,17 +61,4 @@ class CutiController extends Controller
                         ->with('success', 'Pengajuan cuti berhasil disimpan.');
     }
 
-
-    // public function confirmCuti(Request $request, $id)
-    // {
-    //     $cuti = Cuti::findOrFail($id);
-    //     $cuti->update(['status' => 'approved']);
-
-    //     // Deduct leave days from user's remaining leave count
-    //     $user = User::findOrFail($cuti->user_id);
-    //     $user->decrement('sisa_cuti');
-
-    //     return Redirect::back()->with('success', 'Cuti berhasil disetujui');
-    // }
-    
 }

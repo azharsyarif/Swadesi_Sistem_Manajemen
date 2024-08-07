@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             DivisiSeeder::class,
             JabatanSeeder::class,
-            // PermisionSeeder::class,
+            PermisionSeeder::class,
             UserSeeder::class,
             // Other seeders...
         ]);

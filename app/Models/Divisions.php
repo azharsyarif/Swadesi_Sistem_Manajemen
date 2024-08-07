@@ -15,4 +15,9 @@ class Divisions extends Model
     {
         return $this->belongsToMany(User::class, 'division_user');
     }
+
+    public function divisions()
+{
+    return $this->belongsToMany(Divisions::class, 'user_division', 'user_id', 'division_id');
+}
 }

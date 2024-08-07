@@ -13,4 +13,14 @@ class Rekanan extends Model
     public function orders(){
         return $this->hasMany(Order::class);
     }
+
+    public function picCustomers()
+    {
+        return $this->hasMany(PICCustomer::class, 'nama_pt', 'id');
+    }
+    public function invoices()
+{
+    return $this->hasMany(Invoice::class);
+}
+
 }

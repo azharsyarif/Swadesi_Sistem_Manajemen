@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('rekanans', function (Blueprint $table) {
             $table->id();
             $table->string('nama_pt');
+            $table->string('npwp');
             $table->string('no_tlp');
             $table->string('jenis_usaha');
             $table->string('alamat');
             $table->string('term_agrement');
-            // $table->varchar('upload_npwp');
+            $table->string('upload_npwp');
             $table->timestamps();
         });
     }

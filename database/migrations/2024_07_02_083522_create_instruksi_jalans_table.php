@@ -23,6 +23,7 @@ return new class extends Migration
             $table->date('tanggal_stuffing')->nullable();
             $table->date('tanggal_stripping')->nullable();
             $table->string('estimasi_waktu_ke_tujuan');
+            $table->string('estimasi_jarak');
             $table->timestamps();
         });
     }

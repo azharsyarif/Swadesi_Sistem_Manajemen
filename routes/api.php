@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HR\KaryawanController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,3 +23,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/karyawans', [KaryawanController::class, 'storeAPI']);
 Route::post('/login', [KaryawanController::class, 'login']);
+Route::get('/orders/{no_po}', [OrderController::class, 'getOrdersByNoPo']);
+
+

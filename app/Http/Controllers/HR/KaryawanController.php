@@ -21,7 +21,7 @@ class KaryawanController extends Controller
     public function karyawanIndex()
     {
         $roles = Role::all();
-        $users = User::with('role', 'division', 'position')->get();
+        $users = User::with('role', 'divisions', 'position')->get();
         $divisions = Divisions::all();
         $positions = Positions::all();
     
@@ -39,7 +39,7 @@ class KaryawanController extends Controller
     public function viewCreate()
 {
     $roles = Role::all();
-    $users = User::with('role', 'division', 'position')->get();
+    $users = User::with('role', 'divisions', 'position')->get();
     $divisions = Divisions::all();
     $positions = Positions::all();
 
@@ -51,51 +51,55 @@ class KaryawanController extends Controller
     ]);
 }
 
-    public function edit($id)
+public function edit($id)
 {
-    $roles = Role::all(); // Fetch all roles
-    $karyawans = Karyawan::findOrFail($id);
-    return view('HR.editKaryawan', compact('roles','karyawans'));
+    $user = User::with('divisions', 'position', 'role')->findOrFail($id);
+    $roles = Role::all();
+    $divisions = Divisions::all();
+    $positions = Positions::all();
+
+    return view('HR.karyawanCRUD.editKaryawan', compact('user', 'roles', 'divisions', 'positions'));
 }
-public function update(Request $request, $id)
-{
-    $validatedData = $request->validate([
-        // Validasi data yang akan diupdate
-        'nama' => 'required|string|max:255',
-        'divisi' => 'required|string|max:255',
-        'jabatan' => 'required|string|max:255',
-        'tanggal_join' => 'required|date',
-        'alamat' => 'nullable|string',
-        'emergency_call' => 'nullable|string|max:255',
-        'jatah_cuti' => 'nullable|integer',
-    ]);
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'role_id' => 'required|exists:roles,id',
+            'status' => 'required',
+            'position_id' => 'required|exists:positions,id',
+            'tanggal_join' => 'nullable|date',
+            'alamat' => 'nullable|string',
+            'emergency_call_nama' => 'nullable|string|max:255',
+            'emergency_call_nomor' => 'nullable|string|max:20',
+            'jatah_cuti' => 'nullable|integer',
+            'divisions' => 'nullable|array',
+            'divisions.*' => 'exists:divisions,id',
+            'upload_ktp' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        ]);
 
-    try {
-        // Cari karyawan berdasarkan ID
-        $karyawan = Karyawan::findOrFail($id);
+        $user = User::findOrFail($id);
+        $user->fill($validatedData);
 
-        // Update data karyawan
-        $karyawan->nama = $validatedData['nama'];
-        $karyawan->divisi = $validatedData['divisi'];
-        $karyawan->jabatan = $validatedData['jabatan'];
-        $karyawan->tanggal_join = $validatedData['tanggal_join'];
-        $karyawan->alamat = $validatedData['alamat'];
-        $karyawan->emergency_call = $validatedData['emergency_call'];
-        $karyawan->jatah_cuti = $validatedData['jatah_cuti'] ?? 12;
-        $karyawan->save();
+        if ($request->hasFile('upload_ktp')) {
+            $file = $request->file('upload_ktp');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('public/foto_ktp', $filename);
+            $user->upload_ktp = $path;
+        }
 
-        // Update juga data user jika ada perubahan
-        $user = $karyawan->user;
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->role_id = $request->input('role_id');
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
         $user->save();
 
-        return redirect()->route('karyawan.index')->with('success', 'Karyawan berhasil diupdate'); // Redirect ke halaman index karyawan dengan pesan sukses
-    } catch (\Exception $e) {
-        return redirect()->back()->with('error', 'Gagal mengupdate karyawan: ' . $e->getMessage())->withInput(); // Redirect kembali dengan pesan error dan data input sebelumnya
+        if (isset($validatedData['divisions'])) {
+            $user->divisions()->sync($validatedData['divisions']);
+        }
+
+        return redirect()->route('karyawan.index')->with('success', 'Karyawan berhasil diupdate.');
     }
-}
 
 public function show($id)
 {
@@ -104,46 +108,84 @@ public function show($id)
 }
 
 
-public function delete($id)
-{
-    // Cari karyawan berdasarkan ID
-    $karyawan = Karyawan::findOrFail($id);
-
-    // Hapus user terkait
-    $user = $karyawan->user;
-    if ($user) {
+public function destroy($id)
+    {
+        $user = User::findOrFail($id);
         $user->delete();
+
+        return redirect()->route('karyawan.index')
+            ->with('success', 'Karyawan berhasil dihapus.');
     }
 
-    // Hapus karyawan
-    $karyawan->delete();
 
-    // Redirect atau beri respons sukses
-    return redirect()->route('karyawan.index')->with('success', 'Karyawan dan user terkait berhasil dihapus');
-}
     public function storeUser(Request $request)
     {
-        // Validate the request data
+        // Validasi data dari request
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
             'role_id' => 'required|exists:roles,id',
-            'division_id' => 'required|exists:divisions,id',
+            'status' => 'required', // Tambahkan validasi status
             'position_id' => 'required|exists:positions,id',
             'tanggal_join' => 'nullable|date',
             'alamat' => 'nullable|string',
             'emergency_call_nama' => 'nullable|string|max:255',
-            'emergency_call_nomor' => 'nullable|string|max:255',
-            'jatah_cuti' => 'required|integer',
+            'emergency_call_nomor' => 'nullable|string|max:20',
+            'jatah_cuti' => 'nullable|integer',
+            'divisions' => 'nullable|array', // Validasi untuk array divisions
+            'divisions.*' => 'exists:divisions,id', // Validasi untuk setiap elemen di dalam array divisions
+            'upload_ktp' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048', // Validasi untuk file upload KTP
         ]);
-
-        // Create the user
-        $user = User::create($validatedData);
-
-        // Redirect back with success message
+    
+        // Mengunggah file KTP jika ada
+        if ($request->hasFile('upload_ktp')) {
+            $file = $request->file('upload_ktp');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('public/foto_ktp', $filename); // Simpan di storage/app/uploads/ktp
+            $validatedData['upload_ktp'] = $path;
+        }
+    
+        // Generate nomor karyawan dengan format KRY-(Angka)
+        $validatedData['no_karyawan'] = $this->generateNoKaryawan();
+    
+        // Menyimpan user ke dalam database
+        $user = new User();
+        $user->fill($validatedData);
+        $user->password = Hash::make($validatedData['password']);
+        $user->save();
+    
+        // Menyimpan relasi many-to-many untuk divisions
+        if (isset($validatedData['divisions'])) {
+            $user->divisions()->attach($validatedData['divisions']);
+        }
+    
+        // Redirect atau tampilkan pesan sukses
         return redirect()->route('karyawan.index')->with('success', 'User created successfully.');
     }
+    
+    // Fungsi untuk menghasilkan nomor karyawan unik dengan format KRY-(Angka)
+    private function generateNoKaryawan()
+    {
+        $lastUser = User::orderBy('id', 'desc')->first();
+        $lastNoKaryawan = $lastUser ? $lastUser->no_karyawan : null;
+    
+        if ($lastNoKaryawan) {
+            // Ambil angka terakhir dari nomor karyawan sebelumnya
+            $lastNumber = (int)str_replace('KRY-', '', $lastNoKaryawan);
+            $newNoKaryawan = $lastNumber + 1;
+        } else {
+            // Jika belum ada, mulai dari 1001
+            $newNoKaryawan = 1001;
+        }
+    
+        return 'KRY-' . str_pad($newNoKaryawan, 4, '0', STR_PAD_LEFT);
+    }
+    
+
+
+
+
 }
 
 

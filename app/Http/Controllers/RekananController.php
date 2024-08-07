@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Rekanan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class RekananController extends Controller
@@ -25,28 +26,35 @@ class RekananController extends Controller
         return view('Rekanan.crud.create', compact('rekanans'));
     }
     
-    public function create(Request $request){
-        $validator = Validator::make($request->all(), [
-            'nama_pt' => 'required|string',
-            'no_tlp' => 'required|string|max:15',
-            'jenis_usaha' => 'required|string',
-            'alamat' => 'required|string',
-            'term_agrement' => 'required|string',
-        ]);
+    public function create(Request $request)
+{
+    $request->validate([
+        'nama_pt' => 'required|string',
+        'npwp' => 'required|string',
+        'no_tlp' => 'required|string|max:15',
+        'jenis_usaha' => 'required|string',
+        'alamat' => 'required|string',
+        'upload_npwp' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi untuk file gambar
+        'term_agrement' => 'required|string',
+    ]);
 
-        if($validator->fails()){
-            return redirect()->route('rekanan.index')->withErrors($validator)->withInput();
-        }
+    // Upload dokumen
+    $uploadDokumen = $request->file('upload_npwp');
+    $uploadPath = $uploadDokumen ? $uploadDokumen->store('uploads', 'public') : null;
 
-        $rekanan = new Rekanan();
-        $rekanan->nama_pt = $request->nama_pt;
-        $rekanan->no_tlp = $request->no_tlp;
-        $rekanan->jenis_usaha = $request->jenis_usaha;
-        $rekanan->alamat = $request->alamat;
-        $rekanan->term_agrement = $request->term_agrement;
-        $rekanan->save();
-        return redirect()->route('rekanan.index');
-    }
+    $rekanan = new Rekanan();
+    $rekanan->nama_pt = $request->nama_pt;
+    $rekanan->npwp = $request->npwp;
+    $rekanan->no_tlp = $request->no_tlp;
+    $rekanan->jenis_usaha = $request->jenis_usaha;
+    $rekanan->alamat = $request->alamat;
+    $rekanan->upload_npwp = $uploadPath; // Simpan path relatif file
+    $rekanan->term_agrement = $request->term_agrement;
+    $rekanan->save();
+
+    return redirect()->route('rekanan.index')->with('success', 'Data rekanan berhasil ditambahkan');
+}
+
 
     public function viewEdit ($id){
         $rekanan = Rekanan::findOrFail($id);
@@ -68,5 +76,16 @@ class RekananController extends Controller
     $rekanan->update($validatedData);
 
     return redirect()->route('rekanan.index')->with('success', 'Rekanan updated successfully.');
+}
+
+public function delete($id){
+    $rekanan = Rekanan::findOrFail($id);
+
+    if ($rekanan->upload_npwp) {
+        Storage::disk('public')->delete($rekanan->upload_npwp);
+    }
+
+    $rekanan->delete();
+    return redirect()->route('rekanan.index')->with('success','data rekanan berhasil di hapus');
 }
 }

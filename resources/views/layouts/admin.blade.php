@@ -62,6 +62,12 @@
             <span>{{ __('Data Rekanan') }}</span>
         </a>
     </li>
+    <li class="nav-item {{ Nav::isRoute('pic-index') }}">
+        <a class="nav-link" href="{{ route('pic-index') }}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>{{ __('Data PIC') }}</span>
+        </a>
+    </li>
 @endif
 
 @if(Auth::user()->hasRole('admin') || Auth::user()->permissions->contains('name', 'manage_human_resource'))
@@ -90,22 +96,34 @@
     </li>
 
 <!-- Nav Item - Permohonan Cuti -->
-    <li class="nav-item {{ Nav::isRoute('pengajuan.cuti.index') }}">
-        <a class="nav-link" href="{{ route('pengajuan.cuti.index') }}">
-            <i class="fas fa-fw fa-user"></i>
-            <span>{{ __('Permohonan Cuti') }}</span>
-        </a>
-    </li>
 
-<!-- Nav Item - Permohonan Izin Sakit -->
-    <li class="nav-item {{ Nav::isRoute('pengajuan.izin-sakit.index') }}">
-        <a class="nav-link" href="{{ route('pengajuan.izin-sakit.index') }}">
-            <i class="fas fa-fw fa-user"></i>
-            <span>{{ __('Permohonan Izin Sakit') }}</span>
-        </a>
-    </li>
+    
+
+    @if(Auth::user()->hasRole('manager') || Auth::user()->hasRole('admin'))
+   
+    @endif
+<!-- Nav Item - Permohonan Izin Sakit --><li class="nav-item {{ Nav::isRoute('pengajuan.izin-sakit.index') }}">
+    <a class="nav-link" href="{{ route('pengajuan.izin-sakit.index') }}">
+        <i class="fas fa-fw fa-user"></i>
+        <span>{{ __('Permohonan Izin Sakit') }}</span>
+    </a>
+</li>
+
 @endif
-
+@if (Auth::user()->hasRole('staff') || Auth::user()->hasRole('admin'))
+<li class="nav-item {{ Nav::isRoute('pengajuan.cuti.index') }}">
+    <a class="nav-link" href="{{ route('pengajuan.cuti.index') }}">
+        <i class="fas fa-fw fa-user"></i>
+        <span>{{ __('Permohonan Cuti') }}</span>
+    </a>
+</li>
+<li class="nav-item {{ Nav::isRoute('approval.index') }}">
+    <a class="nav-link" href="{{ route('approval.index') }}">
+        <i class="fas fa-fw fa-user"></i>
+        <span>{{ __('Approval Cuti,Izin dan sakit') }}</span>
+    </a>
+</li>
+@endif
 @if(Auth::user()->hasRole('admin') || Auth::user()->permissions->contains('name', 'manage_marketing'))
 <!-- Divider -->
 <hr class="sidebar-divider">
@@ -130,6 +148,15 @@
             <span>{{ __('Invoice Management') }}</span>
         </a>
     </li>
+
+    <li class="nav-item {{ Nav::isRoute('marketing.po.index') }}">
+        <a class="nav-link" href="{{ route('marketing.po.index') }}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>{{ __('PO Customer Management') }}</span>
+        </a>
+    </li>
+    
+
 @endif
 
 

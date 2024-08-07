@@ -21,6 +21,8 @@ class User extends Authenticatable
 
     protected $guarded= ['id'];
 
+    // protected $fillable = ['jatah_cuti', /* kolom lain */];
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -82,9 +84,14 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-    public function division()
+
+    // public function division()
+    // {
+    //     return $this->belongsTo(Divisions::class);
+    // }
+    public function divisions()
     {
-        return $this->belongsTo(Divisions::class);
+        return $this->belongsToMany(Divisions::class, 'user_division', 'user_id', 'division_id')->withTimestamps();
     }
     public function position()
     {
@@ -99,4 +106,13 @@ class User extends Authenticatable
 {
     return $this->belongsToMany(Permission::class, 'user_permissions', 'user_id', 'permission_id');
 }
+public function approvedPengajuanCutis()
+    {
+        return $this->hasMany(PengajuanCuti::class, 'approved_by');
+    }
+
+    public function pengajuanCutis()
+    {
+        return $this->hasMany(PengajuanCuti::class, 'karyawan_id');
+    }
 }

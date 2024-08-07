@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('tanggal_akhir');
             $table->text('alasan');
             $table->string('status')->default('Pending')->nullable();
+            $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

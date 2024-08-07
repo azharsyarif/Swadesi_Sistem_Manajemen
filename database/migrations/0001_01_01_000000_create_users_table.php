@@ -24,17 +24,20 @@ return new class extends Migration
         // });
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->string('no_karyawan')->unique()->nullable();
             $table->string('name');
             $table->string('email')->unique();
             $table->foreignId('role_id')->constrained()->onDelete('cascade');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->string('nama')->nullable();
-            $table->foreignId('division_id')->constrained('divisions')->onDelete('cascade');
+            // $table->string('nama')->nullable();
+            $table->string('status')->nullable();
+            // $table->foreignId('division_id')->constrained('divisions')->onDelete('cascade');
             $table->foreignId('position_id')->constrained('positions')->onDelete('cascade');
             $table->date('tanggal_join')->nullable();
             $table->text('alamat')->nullable();
+            $table->string('upload_ktp')->nullable();
             $table->string('emergency_call_nama')->nullable();
             $table->string('emergency_call_nomor')->nullable();
             $table->integer('jatah_cuti')->default(12);

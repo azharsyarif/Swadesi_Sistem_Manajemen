@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('pengajuan_izin_sakits', function (Blueprint $table) {
             $table->id();
             $table->foreignId('karyawan_id')->constrained('users')->onDelete('cascade');
+            $table->string('jenis')->nullable();
             $table->date('tanggal_mulai');
             $table->date('tanggal_akhir');
             $table->text('alasan');
             $table->string('bukti_dokumen')->nullable();
             $table->string('status')->default('Pending');
+            $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

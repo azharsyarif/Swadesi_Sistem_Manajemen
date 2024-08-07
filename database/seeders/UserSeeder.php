@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
                 'email' => 'azhar@example.com',
                 'password' => Hash::make('123456'),
                 'role_id' => 1,
-                'division_id' => 1,
+                // 'division_id' => 1,
                 'position_id' => 1,
                 'tanggal_join' => Carbon::now(),
                 'alamat' => 'Jl. Contoh Alamat No.1',
